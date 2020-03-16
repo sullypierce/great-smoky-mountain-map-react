@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 import token from './Token'
+import MarkerPopup from './components/marker/MarkerPopup'
 
 const dummyDataPath = [
   [36.134842046153565, -86.75954818725587],
@@ -12,9 +13,26 @@ const dummyDataPath = [
 export default class Map extends Component {
   map = null;
 
+  getMarkers = () => {
+    fetch(`http://localhost:8000/markers`, {
+      "headers": {
+        "Accept": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((markers) => {
+        markers.forEach(marker => {
+          L.marker([marker.lat, marker.long])
+              .bindPopup(
+                `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
+              .addTo(this.map);
+        });
+      })
+  }
+
   componentDidMount() {
     // create map
-    this.map = L.map('map').setView([35.593194343320405, -83.51481347344817], 9);
+    this.map = L.map('map').setView([35.593194343320405, -83.51481347344817], 10);
 
     // add basemap
     L.tileLayer(
@@ -26,7 +44,7 @@ export default class Map extends Component {
         accessToken: token.mapboxToken
       }).addTo(this.map);
 
-
+    this.getMarkers()
     // navigator.geolocation.getCurrentPosition(position => {
     //   const coords = position.coords;
     //   this.map.setView([coords.latitude, coords.longitude], 16);
@@ -41,6 +59,9 @@ export default class Map extends Component {
       const lat = event.latlng.lat
       const lng = event.latlng.lng;
       console.log(lat, lng);
+      L.marker([lat, lng])
+        .bindPopup('You clicked this <strong>location</strong>!')
+        .addTo(this.map);
     });
 
     L.polyline(dummyDataPath)
