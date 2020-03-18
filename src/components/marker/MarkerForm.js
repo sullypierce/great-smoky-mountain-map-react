@@ -9,8 +9,8 @@ class MarkerForm extends Component {
         is_public: false,
         picture_url: 0,
         marker_type_id: 1,
-        lat: this.props.location.state.lat,
-        long: this.props.location.state.long,
+        lat: this.props.lat,
+        long: this.props.long,
         markertypes: []
     }
 

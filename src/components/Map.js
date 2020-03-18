@@ -24,6 +24,7 @@ export default class Map extends Component {
           L.marker([marker.lat, marker.long])
               .bindPopup(
                 `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
+              .on('click', () => this.props.changeToMarkerView(marker.id))
               .addTo(this.map);
         });
       })
@@ -60,22 +61,16 @@ export default class Map extends Component {
     //     .bindPopup('This is your current <strong>location</strong>')
     //     .addTo(this.map);
     // });
-
+    let clickMarker = L.marker([35.593194343320405, -83.51481347344817])
     // log user clicks
     this.map.on('click', event => {
       const lat = event.latlng.lat
       const lng = event.latlng.lng;
       console.log(lat, lng);
-      this.props.history.push({
-        pathname: '/addmarker',
-        state: {lat: lat,
-        long: lng}
-      })
-      L.marker([lat, lng])
+      clickMarker.setLatLng([lat, lng])
         .bindPopup(`Would you like to add a marker here?`)
         .addTo(this.map);
     });
-
     L.polyline(dummyDataPath)
       .addTo(this.map);
   }
