@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
-import token from './Token'
-import MarkerPopup from './components/marker/MarkerPopup'
+import token from '../Token'
 
 const dummyDataPath = [
   [36.134842046153565, -86.75954818725587],
@@ -28,6 +27,14 @@ export default class Map extends Component {
               .addTo(this.map);
         });
       })
+  }
+
+  sendToForm = (lat, long) => {
+    this.props.history.push({
+      pathname: '/addmarker',
+      state: { lat: lat,
+      long: long }
+    })
   }
 
   componentDidMount() {
@@ -59,8 +66,13 @@ export default class Map extends Component {
       const lat = event.latlng.lat
       const lng = event.latlng.lng;
       console.log(lat, lng);
+      this.props.history.push({
+        pathname: '/addmarker',
+        state: {lat: lat,
+        long: lng}
+      })
       L.marker([lat, lng])
-        .bindPopup('You clicked this <strong>location</strong>!')
+        .bindPopup(`Would you like to add a marker here?`)
         .addTo(this.map);
     });
 

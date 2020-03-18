@@ -1,11 +1,12 @@
 import React from 'react';
-import Map from './Map';
 import './App.css';
+import ApplicationViews from './ApplicationViews';
+import NavBar from './components/nav/NavBar'
 
 function App() {
   return (
     <div className="App">
-      <Map />
+      <ApplicationViews />
     </div>
   );
 }
