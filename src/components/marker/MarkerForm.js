@@ -28,14 +28,13 @@ class MarkerForm extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     ApiManager.get('markertypes')
-    //     .then(markertypes => this.setState({markertypes}))
-    // }
+    componentDidMount() {
+        ApiManager.get('markertypes')
+        .then(markertypes => this.setState({markertypes}))
+    }
 
-    handleSubmit = event => {
-        event.preventDefault()   
-        const format = /[!@#$%^&*()]/
+    handleSubmit = event => {  
+        const format = /[@#$%^&*()]/
         if (format.test(this.state.description)) {
             window.alert("Special characters (!@#$%^&*()) are not allowed in the name or description")
         }else if(!event.target.checkValidity()){
@@ -58,7 +57,7 @@ class MarkerForm extends Component {
     render() {
         return (
             <>
-                <h2 className="f6 gray fw2 ttu tracked product-header">Add a Marker</h2>
+                <h2 className="f6 gray fw2 ttu tracked product-header">Add a Marker at <br/> {this.props.lat}, {this.props.long}</h2>
                 <form className="pa4 black-80" onSubmit={this.handleSubmit} >
                     <div className="measure">
                         <label htmlFor="description" className="f6 b db mb2">Description</label>
@@ -75,7 +74,7 @@ class MarkerForm extends Component {
                     <div className="measure">
                         
                         <label className="f6 b db mb2" htmlFor="marker_type_id">Marker Type</label>
-                        <select onChange={this.handleFieldChange} className="input-reset ba b--black-20 pa2 mb2 db w-100" id="marker_type_id">
+                        <select onChange={this.handleFieldChange} className="input-reset ba b--black-20 pa2 mb2 db w-100" value={this.state.marker_type_id} id="marker_type_id">
                             {this.state.markertypes.map(type => 
                                 <option key={type.id} value={type.id}>{type.type_name}</option>
                             )}

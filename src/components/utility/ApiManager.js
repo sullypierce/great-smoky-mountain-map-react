@@ -11,7 +11,8 @@ const ApiManager = {
     getOne: function (endpoint, id) {
       return fetch(`http://localhost:8000/${endpoint}/${id}`, {
         "headers": {
-          "Accept": "application/json"
+          "Accept": "application/json",
+          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
         }
       })
         .then(response => response.json())

@@ -10,7 +10,7 @@ export default props => {
         if (isAuthenticated()) {
         // if (props.displayTitle === "My Account") return <MyAccount />
         if (props.displayTitle === "Add Marker") return <MarkerForm lat={props.lat} long={props.long}/>
-        if (props.displayTitle === 'Marker View') return <MarkerCard id={props.markerId}/>
+        if (props.displayTitle === 'Marker View') return <MarkerCard id={props.markerId} marker={props.marker}/>
         else return <p>Hello</p>
         
     }}

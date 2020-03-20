@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
 import token from '../Token'
+import ApiManager from './utility/ApiManager';
 
 const dummyDataPath = [
   [36.134842046153565, -86.75954818725587],
@@ -20,21 +21,44 @@ export default class Map extends Component {
     })
       .then(response => response.json())
       .then((markers) => {
+        let all = []
+        let hiking = []
+        let fishing = []
         markers.forEach(marker => {
-          L.marker([marker.lat, marker.long])
-              .bindPopup(
-                `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
-              .on('click', () => this.props.changeToMarkerView(marker.id))
-              .addTo(this.map);
+          let newMarker = L.marker([marker.lat, marker.long])
+            .bindPopup(
+              `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
+            .on('click', () => {
+              this.props.changeToMarkerView(marker.id)
+            })
+            console.log(marker)
+            console.log(newMarker)
+            hiking.push(newMarker)
+            all.push(newMarker)
+
+            // eval(`${marker.marker_type.type_name}` + '.append(newMarker)');
         });
+        let completeLayer = L.layerGroup(all)
+        let hikingLayer = L.layerGroup(hiking)
+        let fishingLayer = L.layerGroup(fishing)
+        let overlayMaps = {
+          'All' : completeLayer,
+          'Hiking' : hikingLayer,
+          'Fishing' : fishingLayer
+        }
+        completeLayer.addTo(this.map)
+        L.control.layers(overlayMaps).addTo(this.map);
+
       })
   }
 
   sendToForm = (lat, long) => {
     this.props.history.push({
       pathname: '/addmarker',
-      state: { lat: lat,
-      long: long }
+      state: {
+        lat: lat,
+        long: long
+      }
     })
   }
 
@@ -70,6 +94,7 @@ export default class Map extends Component {
       clickMarker.setLatLng([lat, lng])
         .bindPopup(`Would you like to add a marker here?`)
         .addTo(this.map);
+      this.props.changeFormCoordinates(lat, lng)
     });
     L.polyline(dummyDataPath)
       .addTo(this.map);

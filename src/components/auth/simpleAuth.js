@@ -1,5 +1,5 @@
 const isAuthenticated = () => {
-    return sessionStorage.getItem("bangazon_token") !== null
+    return sessionStorage.getItem("map_token") !== null
   }
   
   const register = (userInfo) => {
@@ -14,7 +14,7 @@ const isAuthenticated = () => {
     .then(res => res.json())
     .then(res => {
       if ("token" in res) {
-        sessionStorage.setItem( "bangazon_token", res.token )
+        sessionStorage.setItem( "map_token", res.token )
       }
   })
   }
@@ -31,14 +31,14 @@ const isAuthenticated = () => {
     .then(res => res.json())
     .then(res => {
       if ("valid" in res && res.valid && "token" in res) {
-          sessionStorage.setItem( "bangazon_token", res.token )
+          sessionStorage.setItem( "map_token", res.token )
       }
   })
   }
   
   // Note! This is not an async method. Don't make the mistake of doing logout().then()
   const logout = () => {
-    sessionStorage.removeItem("bangazon_token")
+    sessionStorage.removeItem("map_token")
   }
   
   export { isAuthenticated, login, register, logout }

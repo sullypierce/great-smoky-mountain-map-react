@@ -10,31 +10,44 @@ class MainView extends Component {
         displayTitle: '',
         lat: '0',
         long: '0',
-        markerId: 0
+        marker: {}
     }
 
     changeToMarkerView = (id) => {
+        ApiManager.getOne('markers', id)
+        .then((marker) => {
+            this.setState({
+                displayTitle: 'Marker View',
+                marker: marker
+            })
+        })
+        
+    }
+
+    changeFormCoordinates = (lat, long) => {
         this.setState({
-            displayTitle: 'Marker View',
-            markerId: id
+            displayTitle: 'Add Marker',
+            lat: lat,
+            long: long
         })
     }
 
     render() {
         return (
             <>
-                <NavBar />
-                <section className="flex avenir">
+                
+                <section className="mainView flex avenir">
                     <article className="w-70 pv2 ph4">
+                        <NavBar />
                         <Map 
                         changeToMarkerView={this.changeToMarkerView}
+                        changeFormCoordinates={this.changeFormCoordinates}
                         />
-                    </article>
-                    <article className="w-30 bg-light-gray">
                         <SideBar 
                             displayTitle={this.state.displayTitle}
                             lat={this.state.lat}
                             long={this.state.long}
+                            marker={this.state.marker}
                         />
                     </article>
                 </section>

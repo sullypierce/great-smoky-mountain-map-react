@@ -9,14 +9,14 @@ class NavBar extends Component {
         markerTypes: []
     }
 
-    // componentDidMount() {
-    //     ApiManager.get('markertypes')
-    //         .then(markerTypeList => {
-    //             this.setState({
-    //                 markerTypes: markerTypeList
-    //             })
-    //         })
-    // }
+    componentDidMount() {
+        ApiManager.get('markertypes')
+            .then(markerTypeList => {
+                this.setState({
+                    markerTypes: markerTypeList
+                })
+            })
+    }
 
     markerTypeURL = () => {
         this.props.history.push(`/markertype/${this.state.markerTypeId}`)
@@ -39,12 +39,21 @@ class NavBar extends Component {
                 <div className="flex">
 
                     <div className="search-options">
-                        <select id="productTypeId" onChange={this.handleMarkerTypeSelect}>
-                            {/* <option value="all">all product types</option>
+
+                        {this.state.markerTypes.map(markerType => {
+                                return (
+                                <div key={markerType.id}>
+                                <label htmlFor={markerType.type_name}>{markerType.type_name}</label>
+                                <input key={markerType.id} type='checkbox' id={markerType.type_name} onClick={this.props.changeFilteredTypes} value={markerType.id}/>
+                                </div> 
+                                )
+                        })}
+                        {/* <select id="productTypeId" onChange={this.handleMarkerTypeSelect}>
+                            <option value="all">all product types</option>
                             {this.props.markerTypes.map(markerType => {
                                 return <option key={markerType.id} value={markerType.id}>{markerType.type_name}</option>
-                            })} */}
-                        </select>
+                            })}
+                        </select> */}
 
 
                     </div>
