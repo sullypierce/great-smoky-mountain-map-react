@@ -44,8 +44,8 @@ class MarkerForm extends Component {
                 description: this.state.description,
                 is_public: this.state.is_public,
                 picture_url: this.state.picture_url,
-                lat: this.state.lat,
-                long: this.state.long,
+                lat: this.props.lat,
+                long: this.props.long,
                 marker_type_id: this.state.marker_type_id
             }
                         

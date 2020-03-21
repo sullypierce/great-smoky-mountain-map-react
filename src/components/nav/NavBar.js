@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import { isAuthenticated, logout } from "../auth/simpleAuth"
 import ApiManager from '../utility/ApiManager'
+import logo from './LogoMakr_4MLnWw.png' 
 
 class NavBar extends Component {
     state = {
@@ -9,23 +10,9 @@ class NavBar extends Component {
         markerTypes: []
     }
 
-    componentDidMount() {
-        ApiManager.get('markertypes')
-            .then(markerTypeList => {
-                this.setState({
-                    markerTypes: markerTypeList
-                })
-            })
-    }
 
     markerTypeURL = () => {
         this.props.history.push(`/markertype/${this.state.markerTypeId}`)
-    }
-
-    handleMarkerTypeSelect = evt => {
-        let stateToChange = {}
-        stateToChange[evt.target.id] = evt.target.value
-        this.setState(stateToChange, this.markerTypeURL)
     }
 
     handleLogout = () => {
@@ -35,34 +22,13 @@ class NavBar extends Component {
 
     render() {
         return (
-            <nav className="pa3 pa4-ns avenir f6 f5-ns">
-                <div className="flex">
-
-                    <div className="search-options">
-
-                        {this.state.markerTypes.map(markerType => {
-                                return (
-                                <div key={markerType.id}>
-                                <label htmlFor={markerType.type_name}>{markerType.type_name}</label>
-                                <input key={markerType.id} type='checkbox' id={markerType.type_name} onClick={this.props.changeFilteredTypes} value={markerType.id}/>
-                                </div> 
-                                )
-                        })}
-                        {/* <select id="productTypeId" onChange={this.handleMarkerTypeSelect}>
-                            <option value="all">all product types</option>
-                            {this.props.markerTypes.map(markerType => {
-                                return <option key={markerType.id} value={markerType.id}>{markerType.type_name}</option>
-                            })}
-                        </select> */}
-
-
-                    </div>
+            <nav className="flex pa3 pa4-ns avenir f6 f5-ns fl h-25 w-100 bb">
+                <div className="flex w-50">
+                    <a href='/'><img className='ba br4' src={logo} alt='Great Smoky Mountain Map'/></a>
                 </div>
-                <div className='pt1'>
                     {isAuthenticated()
-                        ? <p className="pointer dim dib mr4" onClick={this.handleLogout}>Logout</p>
-                        : <a className="pointer dim dib mr4" href="/login">Login</a>}
-                </div>
+                        ? <div className='w-50 flex items-center justify-right'><p className="pointer dim dib mr4 tr v-mid ba br3 pa1 ml7" onClick={this.handleLogout}>Logout</p></div>
+                        : <a className="pointer dim dib mr4 tl" href="/login">Login</a>}
             </nav>
         )
     }
