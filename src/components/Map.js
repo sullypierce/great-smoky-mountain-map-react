@@ -18,12 +18,7 @@ export default class Map extends Component {
  
   getMarkers = () => {
      //get all the markers
-    fetch(`http://localhost:8000/markers`, {
-      "headers": {
-        "Accept": "application/json"
-      }
-    })
-      .then(response => response.json())
+      ApiManager.get('markers')
       .then((markers) => {
           // set up arrays to group markers by type
         let all = []

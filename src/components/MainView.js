@@ -11,6 +11,7 @@ class MainView extends Component {
         lat: '0',
         long: '0',
         marker: {},
+        markerToEdit: {},
         user: {}
     }
 
@@ -28,6 +29,11 @@ class MainView extends Component {
             
         })
         
+    }
+
+    setEditMarker = (marker) => {
+        this.setState({markerToEdit: marker,
+        displayTitle: 'Edit Marker'})
     }
 
     changeFormCoordinates = (lat, long) => {
@@ -58,6 +64,8 @@ class MainView extends Component {
                             long={this.state.long}
                             marker={this.state.marker}
                             user={this.state.user}
+                            setEditMarker={this.setEditMarker}
+                            markerToEdit={this.state.markerToEdit}
                             />
                             </div>
                     </article>
