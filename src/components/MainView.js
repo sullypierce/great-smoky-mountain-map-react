@@ -10,18 +10,30 @@ class MainView extends Component {
         displayTitle: '',
         lat: '0',
         long: '0',
-        marker: {}
+        marker: {},
+        markerToEdit: {},
+        user: {}
     }
 
     changeToMarkerView = (id) => {
         ApiManager.getOne('markers', id)
         .then((marker) => {
-            this.setState({
-                displayTitle: 'Marker View',
-                marker: marker
+            ApiManager.get('users')
+            .then(user => {
+                this.setState({
+                    displayTitle: 'Marker View',
+                    marker: marker,
+                    user: user
+                })
             })
+            
         })
         
+    }
+
+    setEditMarker = (marker) => {
+        this.setState({markerToEdit: marker,
+        displayTitle: 'Edit Marker'})
     }
 
     changeFormCoordinates = (lat, long) => {
@@ -36,19 +48,26 @@ class MainView extends Component {
         return (
             <>
                 
-                <section className="mainView flex avenir">
-                    <article className="w-70 pv2 ph4">
-                        <NavBar />
+                <section className="mainView avenir">
+                <NavBar />
+                    <article className="flex w-100 justify-center h-75 pv2 ph4">
+                        <div className='w-75'>
                         <Map 
                         changeToMarkerView={this.changeToMarkerView}
                         changeFormCoordinates={this.changeFormCoordinates}
                         />
+                        </div>
+                        <div className='w-25'>
                         <SideBar 
                             displayTitle={this.state.displayTitle}
                             lat={this.state.lat}
                             long={this.state.long}
                             marker={this.state.marker}
-                        />
+                            user={this.state.user}
+                            setEditMarker={this.setEditMarker}
+                            markerToEdit={this.state.markerToEdit}
+                            />
+                            </div>
                     </article>
                 </section>
             </>

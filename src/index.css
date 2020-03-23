@@ -17,3 +17,8 @@ mainView {
   flex-direction: row !important;
   flex-wrap: nowrap;
 }
+
+#map {
+  padding: 0;
+  margin: 0;
+}

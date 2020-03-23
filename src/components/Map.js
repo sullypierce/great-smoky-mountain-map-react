@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import token from '../Token'
 import ApiManager from './utility/ApiManager';
+import orangeMarker from './LogoMakr_5bMiza.png'
+import markerShadow from './pinshadow.png'
 
 const dummyDataPath = [
   [36.134842046153565, -86.75954818725587],
@@ -13,53 +15,46 @@ const dummyDataPath = [
 export default class Map extends Component {
   map = null;
 
+ 
   getMarkers = () => {
-    fetch(`http://localhost:8000/markers`, {
-      "headers": {
-        "Accept": "application/json"
-      }
-    })
-      .then(response => response.json())
+     //get all the markers
+      ApiManager.get('markers')
       .then((markers) => {
+          // set up arrays to group markers by type
         let all = []
         let hiking = []
         let fishing = []
+        //loop through all markers
         markers.forEach(marker => {
           let newMarker = L.marker([marker.lat, marker.long])
             .bindPopup(
               `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
+              //add a click handler to show detailed view in sidebar
             .on('click', () => {
               this.props.changeToMarkerView(marker.id)
             })
-            console.log(marker)
-            console.log(newMarker)
-            hiking.push(newMarker)
             all.push(newMarker)
-
-            // eval(`${marker.marker_type.type_name}` + '.append(newMarker)');
+            //add the marker to the correct array
+            eval(`${marker.marker_type.type_name}` + '.push(newMarker)');
         });
+        
+
+        //loop through again and create a layer for each type of marker and add to overlay obj
         let completeLayer = L.layerGroup(all)
-        let hikingLayer = L.layerGroup(hiking)
-        let fishingLayer = L.layerGroup(fishing)
-        let overlayMaps = {
-          'All' : completeLayer,
-          'Hiking' : hikingLayer,
-          'Fishing' : fishingLayer
-        }
+          let hikingLayer = L.layerGroup(hiking)
+          let fishingLayer = L.layerGroup(fishing)
+        //create object with all layers
+        //add the layer with all markers to the map
         completeLayer.addTo(this.map)
+          let overlayMaps = {
+            'All' : completeLayer,
+            'Fishing': fishingLayer,
+            'Hiking': hikingLayer
+          }
+        //add a control with the layers to the map
         L.control.layers(overlayMaps).addTo(this.map);
-
-      })
-  }
-
-  sendToForm = (lat, long) => {
-    this.props.history.push({
-      pathname: '/addmarker',
-      state: {
-        lat: lat,
-        long: long
-      }
-    })
+        })
+        
   }
 
   componentDidMount() {
@@ -77,21 +72,24 @@ export default class Map extends Component {
       }).addTo(this.map);
 
     this.getMarkers()
-    // navigator.geolocation.getCurrentPosition(position => {
-    //   const coords = position.coords;
-    //   this.map.setView([coords.latitude, coords.longitude], 16);
 
-    //   L.marker([coords.latitude, coords.longitude])
-    //     .bindPopup('This is your current <strong>location</strong>')
-    //     .addTo(this.map);
-    // });
     let clickMarker = L.marker([35.593194343320405, -83.51481347344817])
     // log user clicks
+    var orangeIcon = L.icon({
+      iconUrl: './LogoMakr_5bMiza.png',
+      shadowUrl: './pinshadow.png',
+  
+      iconSize:     [38, 95], // size of the icon
+      shadowSize:   [50, 64], // size of the shadow
+      iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62],  // the same for the shadow
+      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+  });
     this.map.on('click', event => {
       const lat = event.latlng.lat
       const lng = event.latlng.lng;
       console.log(lat, lng);
-      clickMarker.setLatLng([lat, lng])
+      clickMarker.setLatLng([lat, lng], {icon: orangeIcon})
         .bindPopup(`Would you like to add a marker here?`)
         .addTo(this.map);
       this.props.changeFormCoordinates(lat, lng)

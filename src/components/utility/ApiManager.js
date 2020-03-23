@@ -3,7 +3,7 @@ const ApiManager = {
       return fetch(`http://localhost:8000/${endpoint}`, {
         "headers": {
           "Accept": "application/json",
-          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
+          "Authorization": `Token ${sessionStorage.getItem("map_token")}`
         }
       })
         .then(response => response.json())
@@ -12,7 +12,7 @@ const ApiManager = {
       return fetch(`http://localhost:8000/${endpoint}/${id}`, {
         "headers": {
           "Accept": "application/json",
-          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
+          "Authorization": `Token ${sessionStorage.getItem("map_token")}`
         }
       })
         .then(response => response.json())
@@ -23,7 +23,7 @@ const ApiManager = {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
+          "Authorization": `Token ${sessionStorage.getItem("map_token")}`
         },
         body: JSON.stringify(object)
       })
@@ -35,7 +35,7 @@ const ApiManager = {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
+          "Authorization": `Token ${sessionStorage.getItem("map_token")}`
         }
       })
     },
@@ -45,7 +45,7 @@ const ApiManager = {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Authorization": `Token ${sessionStorage.getItem("bangazon_token")}`
+          "Authorization": `Token ${sessionStorage.getItem("map_token")}`
         },
         body: JSON.stringify(object)
       })
