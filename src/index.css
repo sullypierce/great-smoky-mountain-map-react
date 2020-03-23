@@ -22,3 +22,9 @@ mainView {
   padding: 0;
   margin: 0;
 }
+
+.loginBackground {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(https://smokymountains.com/wp-content/uploads/2018/10/Smoky-Mountains-Autum-Hike-1024x768.jpg);
+}
