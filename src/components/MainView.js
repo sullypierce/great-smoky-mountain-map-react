@@ -48,7 +48,7 @@ class MainView extends Component {
         return (
             <>
                 
-                <section className="mainView avenir">
+                <section className="mainBackground flex-column mainView avenir">
                 <NavBar />
                     <article className="flex w-100 justify-center h-75 pv2 ph4">
                         <div className='w-75'>
@@ -57,7 +57,7 @@ class MainView extends Component {
                         changeFormCoordinates={this.changeFormCoordinates}
                         />
                         </div>
-                        <div className='w-25'>
+                        <div className='ba w-25 bg-washed-blue o-80'>
                         <SideBar 
                             displayTitle={this.state.displayTitle}
                             lat={this.state.lat}

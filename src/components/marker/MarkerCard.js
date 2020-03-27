@@ -13,14 +13,16 @@ class MarkerCard extends Component {
 
     render() {
         return (
-            <article className=" ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l ma3">
+            <article className=' pa2 w-100'>
                 <img src={this.props.marker.picture_url} alt={'marker'}/>
-                <div>{this.props.marker.description}</div>
+                <div className="ba">Description: {this.props.marker.description}</div>
+                {/* <div>Type: {this.props.marker.type_name}</div> */}
+
             
             {this.props.isUsers ? 
             <>
                 <form onSubmit={() => this.deleteMarker(this.props.marker.id)}>
-                <button  type="submit">Delete</button></form>
+                <button className='ma2' type="submit">Delete</button></form>
                 <button onClick={() => this.props.setEditMarker(this.props.marker)}>Edit</button></>
             : null}
             </article>
