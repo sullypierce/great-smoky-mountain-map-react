@@ -24,7 +24,7 @@ class NavBar extends Component {
         return (
             <nav className="flex pa3 pa4-ns avenir f6 f5-ns fl h-25 w-100 bb">
                 <div className="flex w-50">
-                    <a href='/'><img className='ba br4' src={logo} alt='Great Smoky Mountain Map'/></a>
+                    <img className='bb bt' src={logo} alt='Great Smoky Mountain Map'/>
                 </div>
                     {isAuthenticated()
                         ? <div className='w-50 flex items-center justify-right'><p className="pointer dim dib mr4 tr v-mid ba br3 pa1 ml7" onClick={this.handleLogout}>Logout</p></div>

@@ -4,6 +4,7 @@ import token from '../Token'
 import ApiManager from './utility/ApiManager';
 import orangeMarker from './LogoMakr_5bMiza.png'
 import markerShadow from './pinshadow.png'
+import hikingMarker from '../images/hikingmarker.png'
 import hikingProject from '../key'
 
 const dummyDataPath = [
@@ -16,7 +17,28 @@ const dummyDataPath = [
 export default class Map extends Component {
   map = null;
 
- 
+  orangeIcon = L.icon({
+    iconUrl: orangeMarker,
+    shadowUrl: markerShadow,
+
+    iconSize:     [25, 39], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [15, 44], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
+});
+
+hikingIcon = L.icon({
+  iconUrl: hikingMarker,
+  shadowUrl: markerShadow,
+
+  iconSize:     [25, 39], // size of the icon
+  shadowSize:   [50, 64], // size of the shadow
+  iconAnchor:   [15, 44], // point of the icon which will correspond to marker's location
+  shadowAnchor: [4, 62],  // the same for the shadow
+  popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
+});
+
   getMarkers = () => {
      //get all the markers
       ApiManager.get('markers')
@@ -68,12 +90,12 @@ export default class Map extends Component {
         .then(response => response.json())
         .then((trailData => {
           trailData.trails.forEach(trail => {
-            L.marker([trail.latitude, trail.longitude])
-            // .bindPopup(
-              // `<img src="${}"/>`
-              // `<p class="map-text"><strong>Trail Name:</strong> ${trail['name']}</p>`
-              // `<p class="map-text"><strong>Description:</strong> ${trail['summary']}</p>`)
-              //add a click handler to show detailed view in sidebar
+            L.marker([trail.latitude, trail.longitude], {icon: this.hikingIcon})
+            .bindPopup(
+              `<img src="${trail.imgMedium}"/>
+              <p class="map-text"><strong>Trail Name:</strong> ${trail.name}</p>
+              <p class="map-text"><strong>Description:</strong> ${trail.summary}</p>`)
+              // add a click handler to show detailed view in sidebar
             
             .addTo(this.map)
           })
@@ -97,18 +119,9 @@ export default class Map extends Component {
     this.getMarkers()
     this.getTrailMarkers()
 
-    var orangeIcon = L.icon({
-      iconUrl: orangeMarker,
-      shadowUrl: markerShadow,
-  
-      iconSize:     [38, 65], // size of the icon
-      shadowSize:   [50, 64], // size of the shadow
-      iconAnchor:   [22, 74], // point of the icon which will correspond to marker's location
-      shadowAnchor: [4, 62],  // the same for the shadow
-      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-  });
+    
 
-    let clickMarker = L.marker([35.593194343320405, -83.51481347344817], {icon: orangeIcon})
+    let clickMarker = L.marker([35.593194343320405, -83.51481347344817], {icon: this.orangeIcon})
     // log user clicks
     
     this.map.on('click', event => {
@@ -116,7 +129,10 @@ export default class Map extends Component {
       const lng = event.latlng.lng;
       console.log(lat, lng);
       clickMarker.setLatLng([lat, lng])
-        .bindPopup(`Would you like to add a marker here?`)
+        .bindPopup(`Add a marker here?`)
+        // .on('add', () => {
+        //   this.map.openPopup();
+      // })
         .addTo(this.map);
       this.props.changeFormCoordinates(lat, lng)
     });

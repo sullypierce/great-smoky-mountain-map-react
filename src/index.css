@@ -26,5 +26,11 @@ mainView {
 .loginBackground {
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url(https://smokymountains.com/wp-content/uploads/2018/10/Smoky-Mountains-Autum-Hike-1024x768.jpg);
+  background-image: url(https://www.omnihotels.com/-/media/images/hotels/gpirst/activities/gpirst-omni-grove-park-inn-great-smoky-mountain.jpg?h=660&la=en&w=1170);
+}
+
+.mainBackground {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url(https://www.omnihotels.com/-/media/images/hotels/gpirst/activities/gpirst-omni-grove-park-inn-great-smoky-mountain.jpg?h=660&la=en&w=1170);
 }
