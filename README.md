@@ -11,8 +11,3 @@ This project was made with [Create React App](https://github.com/facebook/create
 2. Run npm install
 3. run npm start
 4. go to https://github.com/sullypierce/great-smoky-mountain-map-django , follow the Readme there.
-
-## ERD
-
-![](erdgsmm.pdf)
-
