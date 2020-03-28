@@ -14,6 +14,6 @@ This project was made with [Create React App](https://github.com/facebook/create
 
 ## ERD
 
-![](Great Smoky Mountain Map (1).pdf)
+[embed]Great Smoky Mountain Map (1).pdf[/embed]
 
 
