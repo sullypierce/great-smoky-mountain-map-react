@@ -42,11 +42,11 @@ class MarkerCard extends Component {
             {this.props.savedMarkerIds.includes(this.props.marker.id) ? 
                 <form onSubmit={() => this.deleteSavedMarker(this.props.marker.id)}>
                 
-                <button className='ma2 mt1 mb1 pa2' type="submit"><i class="fas fa-backspace"></i></button></form>
+                <button className='ma2 mt1 mb1 pa2' type="submit"><i className="fas fa-backspace"></i></button></form>
                 :
                 <form onSubmit={() => this.saveMarker(this.props.marker.id)}>
                 
-                <button className='ma2 mt1 mb1 pa2' type="submit"><i class="fas fa-save"></i></button></form>
+                <button className='ma2 mt1 mb1 pa2' type="submit"><i className="fas fa-save"></i></button></form>
         }
             </article>
         )

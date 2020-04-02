@@ -16,10 +16,8 @@ class MainView extends Component {
         savedMarkerIds: []
     }
 
-    addToSavedMarkers = (markerId) => {
-        let newList = this.state.savedMarkerIds
-        newList.push(markerId)
-        this.setState({savedMarkerIds: newList})
+    setSavedMarkers = (markerList) => {
+        this.setState({savedMarkerIds: markerList})
     }
 
     changeToMarkerView = (id) => {
@@ -62,7 +60,7 @@ class MainView extends Component {
                         <Map 
                         changeToMarkerView={this.changeToMarkerView}
                         changeFormCoordinates={this.changeFormCoordinates}
-                        addToSavedMarkers={this.addToSavedMarkers}
+                        setSavedMarkers={this.setSavedMarkers}
                         savedMarkerIds={this.state.savedMarkerIds}
                         />
                         </div>

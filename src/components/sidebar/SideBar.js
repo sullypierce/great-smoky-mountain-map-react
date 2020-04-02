@@ -26,7 +26,7 @@ export default props => {
         user={props.user} 
         isUsers={props.marker.user_id === props.user.id} 
         setEditMarker={props.setEditMarker}
-        savedMarkerIds={this.props.savedMarkerIds} />
+        savedMarkerIds={props.savedMarkerIds} />
         else return <><h2>Welcome!</h2><p>Click a marker to see more info or click anywhere to add a new marker.</p></>
         
     }}
