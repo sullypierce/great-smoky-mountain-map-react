@@ -18,13 +18,18 @@ class MarkerCard extends Component {
                 <div className="ba">Description: {this.props.marker.description}</div>
                 {/* <div>Type: {this.props.marker.type_name}</div> */}
 
-            
+            <div className='flex'>
             {this.props.isUsers ? 
             <>
+                <div className='flex center ma1'>
                 <form onSubmit={() => this.deleteMarker(this.props.marker.id)}>
-                <button className='ma2' type="submit">Delete</button></form>
-                <button onClick={() => this.props.setEditMarker(this.props.marker)}>Edit</button></>
+                
+                <button className='ma2 mt1 mb1 pa2' type="submit"><i className="fas fa-trash-alt"></i></button></form>
+                <button className='ma1' onClick={() => this.props.setEditMarker(this.props.marker)}><i className="fas fa-edit"></i></button>
+                </div>
+            </>
             : null}
+            </div>
             </article>
         )
     }

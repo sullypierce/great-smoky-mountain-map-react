@@ -15,6 +15,8 @@ const isAuthenticated = () => {
     .then(res => {
       if ("token" in res) {
         sessionStorage.setItem( "map_token", res.token )
+        sessionStorage.setItem( "username", userInfo.username )
+        
       }
   })
   }
@@ -32,6 +34,7 @@ const isAuthenticated = () => {
     .then(res => {
       if ("valid" in res && res.valid && "token" in res) {
           sessionStorage.setItem( "map_token", res.token )
+          sessionStorage.setItem( "username", credentials.username )
       }
   })
   }
