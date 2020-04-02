@@ -72,6 +72,15 @@ export default class Map extends Component {
         let hiking = []
         let fishing = []
         let animals = []
+        let savedMarkers = []
+
+        ApiManager.get('savedmarkers')
+              .then(markers => {
+                markers.forEach(marker => {
+                  this.props.addToSavedMarkers(marker.marker_id)
+                })
+              })
+
         //loop through all markers
         markers.forEach(marker => {
           let newMarker = L.marker([marker.lat, marker.long])
@@ -85,8 +94,13 @@ export default class Map extends Component {
           all.push(newMarker)
           //add the marker to the correct array
           eval(`${marker.marker_type.type_name}` + '.push(newMarker)');
+          //check whether to add the marker to saved markers
+          if(this.props.savedMarkerIds.includes(marker.id)){
+            savedMarkers.push(newMarker);
+          }
         });
 
+        //get all the hiking project markers and put them in an array
         let hikingProjectMarkers = []
         fetch(`https://www.hikingproject.com/data/get-trails?lat=35.593194343320405&lon=-83.51481347344817&maxResults=35&maxDistance=35&key=${hikingProject.key}`, {
           'method': "GET",
@@ -106,19 +120,23 @@ export default class Map extends Component {
                 .on('click', () => {
                   this.map.setView([trail.latitude + .23, trail.longitude])
                 })
-              // add a click handler to show detailed view in sidebar
-
               hikingProjectMarkers.push(hikingMarker)
             })
+              //add the hiking project markers to the array with all of them
               all = all.concat(hikingProjectMarkers)
+
+              
+              //create all the layers for the map
               let completeLayer = L.layerGroup(all)
               let hikingLayer = L.layerGroup(hiking)
               let fishingLayer = L.layerGroup(fishing)
               let animalsLayer = L.layerGroup(animals)
               let hikingProjectLayer = L.layerGroup(hikingProjectMarkers)
+              
+              
 
               //create object with all layers
-              //add the layer with all markers to the map
+              //add the layer with all markers to the map to start
               completeLayer.addTo(this.map)
               let overlayMaps = {
                 'All': completeLayer,
@@ -127,6 +145,10 @@ export default class Map extends Component {
                 "Animals": animalsLayer,
                 'Hiking Project': hikingProjectLayer
 
+              }
+              if (savedMarkers != []){
+                let savedMarkersLayer = L.LayerGroup(savedMarkers)
+                overlayMaps['My Saved Markers'] = savedMarkersLayer
               }
               //add a control with the layers to the map
               L.control.layers(overlayMaps).addTo(this.map);

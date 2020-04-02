@@ -11,11 +11,19 @@ class MarkerCard extends Component {
         console.log(this.props.user.id === this.props.marker.user_id)
     }
 
+    deleteSavedMarker = (id) => {
+        ApiManager.delete('savedmarkers', id)
+    }
+
+    saveMarker = (id) => {
+        ApiManager.post('savedmarkers', {'marker_id': id})
+    }
+
     render() {
         return (
             <article className=' pa2 w-100'>
                 <img src={this.props.marker.picture_url} alt={'marker'}/>
-                <div className="ba">Description: {this.props.marker.description}</div>
+                <div className="ba br1">Description: {this.props.marker.description}</div>
                 {/* <div>Type: {this.props.marker.type_name}</div> */}
 
             <div className='flex'>
@@ -30,6 +38,16 @@ class MarkerCard extends Component {
             </>
             : null}
             </div>
+
+            {this.props.savedMarkerIds.includes(this.props.marker.id) ? 
+                <form onSubmit={() => this.deleteSavedMarker(this.props.marker.id)}>
+                
+                <button className='ma2 mt1 mb1 pa2' type="submit"><i class="fas fa-backspace"></i></button></form>
+                :
+                <form onSubmit={() => this.saveMarker(this.props.marker.id)}>
+                
+                <button className='ma2 mt1 mb1 pa2' type="submit"><i class="fas fa-save"></i></button></form>
+        }
             </article>
         )
     }

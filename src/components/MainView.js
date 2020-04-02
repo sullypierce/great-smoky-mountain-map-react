@@ -12,7 +12,14 @@ class MainView extends Component {
         long: '0',
         marker: {},
         markerToEdit: {},
-        user: {}
+        user: {},
+        savedMarkerIds: []
+    }
+
+    addToSavedMarkers = (markerId) => {
+        let newList = this.state.savedMarkerIds
+        newList.push(markerId)
+        this.setState({savedMarkerIds: newList})
     }
 
     changeToMarkerView = (id) => {
@@ -55,6 +62,8 @@ class MainView extends Component {
                         <Map 
                         changeToMarkerView={this.changeToMarkerView}
                         changeFormCoordinates={this.changeFormCoordinates}
+                        addToSavedMarkers={this.addToSavedMarkers}
+                        savedMarkerIds={this.state.savedMarkerIds}
                         />
                         </div>
                         <div className='ba w-25 bg-washed-blue o-80'>
@@ -66,6 +75,7 @@ class MainView extends Component {
                             user={this.state.user}
                             setEditMarker={this.setEditMarker}
                             markerToEdit={this.state.markerToEdit}
+                            savedMarkerIds={this.state.savedMarkerIds}
                             />
                             </div>
                     </article>
