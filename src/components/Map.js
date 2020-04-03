@@ -21,86 +21,149 @@ export default class Map extends Component {
     iconUrl: orangeMarker,
     shadowUrl: markerShadow,
 
-    iconSize:     [25, 39], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [15, 44], // point of the icon which will correspond to marker's location
+    iconSize: [25, 39], // size of the icon
+    shadowSize: [50, 64], // size of the shadow
+    iconAnchor: [15, 44], // point of the icon which will correspond to marker's location
     shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
-});
+    popupAnchor: [-3, -46] // point from which the popup should open relative to the iconAnchor
+  });
 
-hikingIcon = L.icon({
-  iconUrl: hikingMarker,
-  shadowUrl: markerShadow,
+  hikingIcon = L.icon({
+    iconUrl: hikingMarker,
+    shadowUrl: markerShadow,
 
-  iconSize:     [25, 39], // size of the icon
-  shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [15, 44], // point of the icon which will correspond to marker's location
-  shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -46] // point from which the popup should open relative to the iconAnchor
-});
-
-  getMarkers = () => {
-     //get all the markers
-      ApiManager.get('markers')
-      .then((markers) => {
-          // set up arrays to group markers by type
-        let all = []
-        let hiking = []
-        let fishing = []
-        //loop through all markers
-        markers.forEach(marker => {
-          let newMarker = L.marker([marker.lat, marker.long])
-            .bindPopup(
-              `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
-              //add a click handler to show detailed view in sidebar
-            .on('click', () => {
-              this.props.changeToMarkerView(marker.id)
-            })
-            all.push(newMarker)
-            //add the marker to the correct array
-            eval(`${marker.marker_type.type_name}` + '.push(newMarker)');
-        });
-        
-
-        //loop through again and create a layer for each type of marker and add to overlay obj
-        let completeLayer = L.layerGroup(all)
-          let hikingLayer = L.layerGroup(hiking)
-          let fishingLayer = L.layerGroup(fishing)
-        //create object with all layers
-        //add the layer with all markers to the map
-        completeLayer.addTo(this.map)
-          let overlayMaps = {
-            'All' : completeLayer,
-            'Fishing': fishingLayer,
-            'Hiking': hikingLayer
-          }
-        //add a control with the layers to the map
-        L.control.layers(overlayMaps).addTo(this.map);
-        })
-        
-  }
+    iconSize: [25, 39], // size of the icon
+    shadowSize: [50, 64], // size of the shadow
+    iconAnchor: [15, 44], // point of the icon which will correspond to marker's location
+    shadowAnchor: [15, 62],  // the same for the shadow
+    popupAnchor: [-3, -46] // point from which the popup should open relative to the iconAnchor
+  });
 
   getTrailMarkers = () => {
+    let hikingProjectMarkers = []
     fetch(`https://www.hikingproject.com/data/get-trails?lat=35.593194343320405&lon=-83.51481347344817&maxResults=35&maxDistance=35&key=${hikingProject.key}`, {
-        'method': "GET",
-        "headers": {
-          "Accept": "application/json"
-        }
-      })
-        .then(response => response.json())
-        .then((trailData => {
-          trailData.trails.forEach(trail => {
-            L.marker([trail.latitude, trail.longitude], {icon: this.hikingIcon})
+      'method': "GET",
+      "headers": {
+        "Accept": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((trailData => {
+        trailData.trails.forEach(trail => {
+          let hikingMarker = L.marker([trail.latitude, trail.longitude], { icon: this.hikingIcon })
             .bindPopup(
-              `<img src="${trail.imgMedium}"/>
-              <p class="map-text"><strong>Trail Name:</strong> ${trail.name}</p>
-              <p class="map-text"><strong>Description:</strong> ${trail.summary}</p>`)
-              // add a click handler to show detailed view in sidebar
-            
-            .addTo(this.map)
-          })
-        }))
+              `<img src="${trail.imgSmall}"/>
+            <p class="map-text"><strong>Trail Name:</strong> ${trail.name}</p>
+            <p class="map-text"><strong>Description:</strong> ${trail.summary}</p>
+            <a href=${trail.url}>Link to Hiking Project Page<a/>`)
+          // add a click handler to show detailed view in sidebar
+
+          hikingProjectMarkers.push(hikingMarker)
+        })
+      }))
   }
+
+  getMarkers = () => {
+    //get saved marker info, make list
+    let savedMarkerList = []
+    let savedMarkers = []
+    ApiManager.get('savedmarkers')
+      .then(markers => {
+        markers.forEach(marker => {
+          console.log(marker)
+          let id = marker.marker.url.split('/')[4]
+          savedMarkerList.push(Number(id))
+        })
+        this.props.setSavedMarkers(savedMarkerList)
+
+        //get all the markers
+        ApiManager.get('markers')
+          .then((markers) => {
+            // set up arrays to group markers by type
+            let all = []
+            let hiking = []
+            let fishing = []
+            let animals = []
+
+
+            //loop through all markers
+            markers.forEach(marker => {
+              let newMarker = L.marker([marker.lat, marker.long])
+                .bindPopup(
+                  `<p class="map-text"><strong>Description:</strong> ${marker.description}</p>`)
+                //add a click handler to show detailed view in sidebar
+                .on('click', () => {
+                  this.props.changeToMarkerView(marker.id)
+                  this.map.setView([marker.lat, marker.long], 10)
+                })
+              all.push(newMarker)
+              //add the marker to the correct array
+              eval(`${marker.marker_type.type_name}` + '.push(newMarker)');
+              //check whether to add the marker to saved markers
+              if (savedMarkerList.includes(marker.id)) {
+                savedMarkers.push(newMarker);
+              }
+            });
+
+            //get all the hiking project markers and put them in an array
+            let hikingProjectMarkers = []
+            fetch(`https://www.hikingproject.com/data/get-trails?lat=35.593194343320405&lon=-83.51481347344817&maxResults=35&maxDistance=35&key=${hikingProject.key}`, {
+              'method': "GET",
+              "headers": {
+                "Accept": "application/json"
+              }
+            })
+              .then(response => response.json())
+              .then((trailData => {
+                trailData.trails.forEach(trail => {
+                  let hikingMarker = L.marker([trail.latitude, trail.longitude], { icon: this.hikingIcon })
+                    .bindPopup(
+                      `<img src="${trail.imgMedium}"/>
+            <p class="map-text"><strong>Trail Name:</strong> ${trail.name}</p>
+            <p class="map-text"><strong>Description:</strong> ${trail.summary}</p>
+            <a href=${trail.url} target="_blank">Link to Hiking Project Page<a/>`)
+                    .on('click', () => {
+                      this.map.setView([trail.latitude + .23, trail.longitude])
+                    })
+                  hikingProjectMarkers.push(hikingMarker)
+                })
+                //add the hiking project markers to the array with all of them
+                all = all.concat(hikingProjectMarkers)
+
+
+                //create all the layers for the map
+                let completeLayer = L.layerGroup(all)
+                let hikingLayer = L.layerGroup(hiking)
+                let fishingLayer = L.layerGroup(fishing)
+                let animalsLayer = L.layerGroup(animals)
+                let hikingProjectLayer = L.layerGroup(hikingProjectMarkers)
+                let savedMarkersLayer = L.layerGroup(savedMarkers)
+
+
+
+                //create object with all layers
+                //add the layer with all markers to the map to start
+                completeLayer.addTo(this.map)
+                let overlayMaps = {
+                  'All': completeLayer,
+                  'Fishing': fishingLayer,
+                  'Hiking': hikingLayer,
+                  "Animals": animalsLayer,
+                  'Hiking Project': hikingProjectLayer,
+                  'My Saved Markers': savedMarkersLayer
+
+                }
+                //add a control with the layers to the map
+                L.control.layers(overlayMaps).addTo(this.map);
+
+              }))
+
+
+          })
+      })
+  }
+
+
 
   componentDidMount() {
     // create map
@@ -117,22 +180,22 @@ hikingIcon = L.icon({
       }).addTo(this.map);
 
     this.getMarkers()
-    this.getTrailMarkers()
 
-    
 
-    let clickMarker = L.marker([35.593194343320405, -83.51481347344817], {icon: this.orangeIcon})
+
+    let clickMarker = L.marker([35.593194343320405, -83.51481347344817], { icon: this.orangeIcon })
     // log user clicks
-    
+
     this.map.on('click', event => {
       const lat = event.latlng.lat
       const lng = event.latlng.lng;
+
       console.log(lat, lng);
       clickMarker.setLatLng([lat, lng])
         .bindPopup(`Add a marker here?`)
         // .on('add', () => {
         //   this.map.openPopup();
-      // })
+        // })
         .addTo(this.map);
       this.props.changeFormCoordinates(lat, lng)
     });

@@ -13,9 +13,20 @@ export default props => {
     const currDisplay = () => {
         if (isAuthenticated()) {
         // if (props.displayTitle === "My Account") return <MyAccount />
-        if (props.displayTitle === "Add Marker") return <MarkerForm lat={props.lat} long={props.long}markerToEdit={markerToEdit}/>
-        if (props.displayTitle === "Edit Marker") return <MarkerForm lat={props.markerToEdit.lat} long={props.markerToEdit.long} markerToEdit={props.markerToEdit}/>
-        if (props.displayTitle === 'Marker View') return <MarkerCard marker={props.marker} user={props.user} isUsers={props.marker.user_id === props.user.id} setEditMarker={props.setEditMarker} />
+        if (props.displayTitle === "Add Marker") return <MarkerForm 
+        lat={props.lat} 
+        long={props.long} 
+        markerToEdit={markerToEdit}/>
+        if (props.displayTitle === "Edit Marker") return <MarkerForm 
+        lat={props.markerToEdit.lat} 
+        long={props.markerToEdit.long} 
+        markerToEdit={props.markerToEdit}/>
+        if (props.displayTitle === 'Marker View') return <MarkerCard 
+        marker={props.marker} 
+        user={props.user} 
+        isUsers={props.marker.user_id === props.user.id} 
+        setEditMarker={props.setEditMarker}
+        savedMarkerIds={props.savedMarkerIds} />
         else return <><h2>Welcome!</h2><p>Click a marker to see more info or click anywhere to add a new marker.</p></>
         
     }}
